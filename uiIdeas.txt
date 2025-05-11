@@ -1,0 +1,5 @@
+implement UI to allow shift of the num of planets, size, mass, orbit
+let people label and attach info about it which will be displayed when user clicks on a planet 
+OR attach information about the planet (size, temparature, distance from a sun) in the code and display when user clicks on it (probably too much work)
+-look up how to do gui for python
+-parallel processing? 
