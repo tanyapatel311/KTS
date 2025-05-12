@@ -3,6 +3,3 @@ let people label and attach info about it which will be displayed when user clic
 OR attach information about the planet (size, temparature, distance from a sun) in the code and display when user clicks on it (probably too much work)
 -look up how to do gui for python
 -parallel processing? 
--figure out how to add objects where you clicks
--have buttons for different shapes
--if user hovers over the mass it displays it in the corner
