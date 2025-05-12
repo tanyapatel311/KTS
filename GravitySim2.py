@@ -153,9 +153,23 @@ def main():
     pygame.init()
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    #choose the shape of the simulation randomly
+    def choose_shape():
+        choices = ["generate_spawn", "generate_ring", "generate_spiral"]
+        return random.choice(choices)
+    
+    choice = choose_shape()
+    if choice == "generate_spawn":
+        bodies = generate_spawn(number_of_bodies, rand_start_velocity_range, rand_mass_range, SCREEN_WIDTH, SCREEN_HEIGHT)
+    elif choice == "generate_ring":
+        bodies = generate_ring(number_of_bodies)
+    elif choice == "generate_spiral":
+        bodies = generate_spiral(number_of_bodies, 5)
+    else:
+        print("Sorry, there was an error with the simulation.")
     #bodies = generate_spawn(number_of_bodies, rand_start_velocity_range, rand_mass_range, SCREEN_WIDTH, SCREEN_HEIGHT) 
     #bodies = generate_spiral(number_of_bodies, 5)
-    bodies = generate_ring(number_of_bodies)
+    #bodies = generate_ring(number_of_bodies)
 
 
 
