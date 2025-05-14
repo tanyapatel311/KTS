@@ -80,7 +80,7 @@ def generate_spiral(n, arm_count=2, center=(400, 300)):
     bodies = []
     for i in range(n):
         theta = i * 0.3
-        r = 5 * theta  # increasing radius => spiral
+        r = 6 * theta  # increasing radius => spiral
         arm_offset = (i % arm_count) * (2 * np.pi / arm_count)
         angle = theta + arm_offset
 
