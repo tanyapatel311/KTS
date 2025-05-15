@@ -97,7 +97,7 @@ class UIManager:
 
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and self.creating_body:
             self.creating_body = False
-            velocity = (self.end_pos - self.start_pos) * 0.1
+            velocity = (self.end_pos - self.start_pos) * 0.4
 
             # Spawn a cluster of bodies at the start_pos
             for _ in range(self.body_count):
