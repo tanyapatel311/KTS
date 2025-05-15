@@ -1,6 +1,5 @@
 import pygame, pygame_gui
 from simulation import forces
-
 from ui import UIManager, generate_two_galaxies
 
 def main():
@@ -24,8 +23,6 @@ def main():
     ui = UIManager(screen, manager, bodies, NUM_BODIES, VEL_RANGE, MASS_RANGE)
     paused = False
 
-
-
     running = True
     while running:
         clock.tick(60)
@@ -44,34 +41,25 @@ def main():
         for body in bodies:
             body.draw(screen, 200)
 
-        ui.draw_overlay()
+        ui.draw_line()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.ACTIVEEVENT:
-                if event.state == 2 and event.gain == 0:  # window iconified/moved/unfocused
-                    paused = True
-                elif event.state == 2 and event.gain == 1:
-                    paused = False
-
-            # Handle mouse and UI events
             ui.handle_event(event)
             manager.process_events(event)
 
-            # Process UI actions
             action = ui.process_gui_events(event)
             if action == 'toggle_pause':
                 paused = not paused
                 ui.pause_button.set_text("Play" if paused else "Pause")
             elif action == 'reset':
                 bodies.clear()
-        
+
         manager.update(dt)
         ui.update_info(clock.get_fps())
         manager.draw_ui(screen)
         pygame.display.update()
-        
 
     pygame.quit()
 
