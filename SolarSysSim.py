@@ -154,5 +154,26 @@ def main():
     
     #quit the pygame
     pygame.quit()
-    
 main()
+
+
+
+
+#Force function------------------------------------------------------------
+def forcesa (bodies, max_force, G=1):
+    if len(bodies) < 2:
+        return
+    positions = np.array([body.pos for body in bodies])
+    masses = np.array([body.mass for body in bodies])
+    
+    diff_matrix = positions[None, :, :] - positions[:, None, :]
+    dist_sqr = np.sum(diff_matrix**2, axis=2)
+    np.fill_diagonal(dist_sqr, np.inf)          #Ignores interactions like body1 to body 1
+
+    force_mag = np.minimum(G*masses[:, None] * masses[None, :]/dist_sqr, max_force)
+    force = force_mag[:,:, None] * diff_matrix / np.sqrt(dist_sqr)[:, :, None]
+
+    total_forces = np.sum(force, axis=1)
+    for i, body in enumerate(bodies):
+        body.acc = total_forces[i]/masses[i]
+#Force function------------------------------------------------------------

@@ -39,8 +39,8 @@ class UIManager:
         # Mapping button names to body generators
         generator_defs = {
             'Ring': lambda: generate_ring(self.num_bodies),
-            'Spiral': lambda: generate_spiral(self.num_bodies, 3),
-            'Two Galaxies': lambda: generate_two_galaxies(150),
+            'Spiral': lambda: generate_spiral(self.num_bodies),
+            'Two Galaxies': lambda: generate_two_galaxies(750),
             'Random': lambda: generate_spawn(
                 self.num_bodies, self.vel_range, self.mass_range,
                 self.screen.get_width(), self.screen.get_height()
@@ -119,9 +119,7 @@ class UIManager:
     #NEW FUNCTION: spawns the bodies here for better readability
      # Spawn a cluster of bodies at the start_pos
     def spawn_bodies_button(self, position = None):
-        if position is None:
-            position = np.array([self.screen.get_width() // 2, self.screen.get_height() // 2])
-    
+        
     # set velocity manually if none given
         if self.start_pos is not None and self.end_pos is not None:
             velocity = (self.end_pos - self.start_pos) * 0.1
@@ -153,7 +151,7 @@ class UIManager:
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and self.creating_body:
             self.creating_body = False
             #velocity = (self.end_pos - self.start_pos) * 0.1
-            self.spawn_bodies_button()
+            self.spawn_bodies_button(self.start_pos)
             
             velocity = (self.end_pos - self.start_pos) * 0.4
 
