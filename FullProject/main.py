@@ -69,7 +69,7 @@ def main():
                 bodies.clear()
             elif action == 'create_body':
                 #center = np.array([WIDTH//2, HEIGHT //2])
-                ui.spawn_bodies_button()
+                ui.spawn_bodies_button((1,1))
                 
         
         manager.update(dt)

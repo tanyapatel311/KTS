@@ -29,21 +29,27 @@ class Body:
 #BODY CLASS----------------------------------------------------------------
 
 @njit
-def compute_forces_numba(positions, masses, max_force, G):
+def compute_forces_numba(positions, mass, max_force, G):
     n = positions.shape[0]
     acc = np.zeros((n, 2))
 
     for i in range(n):
-        for j in range(n):
+        m1 = mass[i]
+        x,y = positions[i]
+
+        for j in range(i+1,n):
+            m2 = mass[j]
             if i == j:
                 continue
-            dx = positions[j, 0] - positions[i, 0]
-            dy = positions[j, 1] - positions[i, 1]
-            dist_sqr = dx * dx + dy * dy + 1e-5  # Softening to avoid division by zero
+            dx = positions[j, 0] - x
+            dy = positions[j, 1] - y
+            dist_sqr = dx * dx + dy * dy #+ 1e-5  # Softening to avoid division by zero
             dist = np.sqrt(dist_sqr)
-            f_mag = min(G * masses[i] * masses[j] / dist_sqr, max_force)
-            fx = f_mag * dx / (dist * masses[i])
-            fy = f_mag * dy / (dist * masses[i])
+
+            f_mag = min(G * m1 * m2 / dist_sqr, max_force)
+            fx = f_mag * dx / dist
+            fy = f_mag * dy / dist
+
             acc[i, 0] += fx
             acc[i, 1] += fy
 
