@@ -18,6 +18,25 @@ class UIManager:
         self.creating_body = False
         self.start_pos = None
         self.end_pos = None
+        
+        #add a selected body class to follow its information later
+        self.selected_body = None
+        
+        #get screen size for hover_label
+        screen_width,screen_height = self.screen.get_size()
+        
+        #add a label for the selected body mass
+        self.selected_mass_label = pygame_gui.elements.UILabel(
+            pygame.Rect((-50, screen_height - 30), (250, 25)),
+            f"Mass of body: ", self.manager, object_id="#hover_label"
+        )
+        #add a label for the velocity of the selected body mass
+    
+        self.selected_velocity_label = pygame_gui.elements.UILabel(
+            pygame.Rect((-50, screen_height - 60), (250, 25)),
+            f"Velocity of body: ", self.manager, object_id="#hover_label"
+        )
+        
 
         self._setup_gui()
 
@@ -28,7 +47,8 @@ class UIManager:
             pygame.Rect((10, 10), (80, 30)), 'Pause', self.manager)
         self.reset_button = pygame_gui.elements.UIButton(
             pygame.Rect((100, 10), (80, 30)), 'Reset', self.manager)
-
+        self.create_button = pygame_gui.elements.UIButton(
+            pygame.Rect((190, 10), (80, 30)), 'Create', self.manager)
         # Body generator buttons
         self.mode_buttons = []
         y = 60  # Vertical offset for stacking buttons
@@ -79,33 +99,78 @@ class UIManager:
         self.body_count_label_display = pygame_gui.elements.UILabel(
             pygame.Rect((screen_width - 125, screen_height - 30), (150, 25)),
             "", self.manager)
-
+        
+    #check if the user's mouse is over a body
+    def mouse_over_body (self, mouse_pos):
+        for body in self.bodies:
+            dist = np.linalg.norm(body.pos - mouse_pos)
+            if dist <= body.radius:
+                return body
+        return None   
 
     def update_info(self, fps):
         self.fps_label.set_text(f"FPS: {int(fps)}")
         self.body_count_label_display.set_text(f"Bodies: {len(self.bodies)}")
+        
+        #if a body is selected by a user, then display its mass and velocity
+        if self.selected_body:
+            self.selected_mass_label.set_text(f"Mass: {int(self.selected_body.mass)}")
+            vel = self.selected_body.vel
+            self.selected_velocity_label.set_text(f"Velocity: {vel[0]:.2f}, {vel[1]:.2f}")
+        else:
+            self.selected_mass_label.set_text("Mass: ")
+            self.selected_velocity_label.set_text("Velocity: ")
+        
 
+    #NEW FUNCTION: spawns the bodies here for better readability
+     # Spawn a cluster of bodies at the start_pos
+    def spawn_bodies_button(self, position = None):
+        if position is None:
+            position = np.array([self.screen.get_width() // 2, self.screen.get_height() // 2])
+    
+    # set velocity manually if none given
+        if self.start_pos is not None and self.end_pos is not None:
+            velocity = (self.end_pos - self.start_pos) * 0.1
+        else:
+            velocity = np.array([2.0, 3.0])
 
+        for _ in range(self.body_count):
+            spread = 30  # how far to scatter the bodies
+            scatter = np.random.uniform(-spread, spread, size=2)
+            spawn_pos = position + scatter
+            self.bodies.append(Body(self.default_mass, spawn_pos, velocity, self.default_radius))
+            
 
     # Handle mouse-based body creation ------------------------------------------
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and not self.manager.get_hovering_any_element():
-            self.creating_body = True
-            self.start_pos = self.end_pos = np.array(event.pos)
+            pos = np.array(event.pos)
+            clicked_body = self.mouse_over_body(pos)
+            if clicked_body:
+                #select the body to view its information
+                self.selected_body = clicked_body
+            else:
+                self.creating_body = True
+                self.start_pos = self.end_pos = np.array(event.pos)
 
         elif event.type == pygame.MOUSEMOTION and self.creating_body:
             self.end_pos = np.array(event.pos)
 
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and self.creating_body:
             self.creating_body = False
+            #velocity = (self.end_pos - self.start_pos) * 0.1
+            self.spawn_bodies_button()
+            
             velocity = (self.end_pos - self.start_pos) * 0.4
 
             # Spawn a cluster of bodies at the start_pos
+            """
             for _ in range(self.body_count):
                 spread = 30  # how far to scatter the bodies
                 scatter = np.random.uniform(-spread, spread, size=2)
                 spawn_pos = self.start_pos + scatter
                 self.bodies.append(Body(self.default_mass, spawn_pos, velocity, self.default_radius))
+            """
 
             self.start_pos = self.end_pos = None
 
@@ -115,11 +180,20 @@ class UIManager:
             if event.ui_element == self.pause_button:
                 return 'toggle_pause'
             elif event.ui_element == self.reset_button:
+                #clear the selected body mass
+                self.selected_body = None
+                self.selected_mass_label.set_text("")
                 return 'reset'
+            elif event.ui_element == self.create_button:
+                return 'create_body'
             for button in self.mode_buttons:
                 if event.ui_element == button:
                     self.bodies.clear()
+                    self.selected_body = None
                     self.bodies.extend(button.callback_func())
+                    
+                    
+                    
 
         elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
             if event.ui_element == self.mass_slider:

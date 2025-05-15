@@ -1,9 +1,22 @@
 {
-  "button": {
+    "button": {
     "colours": {
       "normal_bg": "#008080",
       "hovered_bg": "#00a0a0",
       "active_bg": "#006666"
     }
+  },
+  "elements": {
+    "label.#hover_label": {
+      "font": "default_font",
+      "font-size": 13,
+      "text-color": "#FD6905",
+      "background-color": "#FFFFFF"
+    }
+  },
+  "colors": {
+    "selected_body_color":[0, 100,255]
   }
+  
 }
+
