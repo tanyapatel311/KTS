@@ -36,8 +36,8 @@ class UIManager:
         # Mapping button names to body generators
         generator_defs = {
             'Ring': lambda: generate_ring(self.num_bodies),
-            'Spiral': lambda: generate_spiral(self.num_bodies, 3),
-            'Two Galaxies': lambda: generate_two_galaxies(150),
+            'Spiral': lambda: generate_spiral(self.num_bodies),
+            'Two Galaxies': lambda: generate_two_galaxies(750),
             'Random': lambda: generate_spawn(
                 self.num_bodies, self.vel_range, self.mass_range,
                 self.screen.get_width(), self.screen.get_height()
