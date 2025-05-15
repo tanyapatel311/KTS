@@ -23,13 +23,13 @@ class Body:
         else:
             norm_speed = min(speed / max_color, 1)              #Normalization stuff
             speed_color = int((np.abs(1 - norm_speed)) * 255)   #Change from saturated -> vibrant color
-        
         scale_radius = min(max(2, int(self.mass ** 0.3)), 10)   #Compute radius based on mass (capped)
         pygame.draw.circle(screen, (255,speed_color,speed_color), tuple(self.pos), scale_radius)   #Update body
 #BODY CLASS----------------------------------------------------------------
 
 @njit
-def compute_forces_numba(positions, mass, max_force, G):
+def compute_accel(positions, mass, max_force, G):
+    '''calculates acceleration using Numba implementation'''
     n = positions.shape[0]
     acc = np.zeros((n, 2))
 
@@ -55,13 +55,13 @@ def compute_forces_numba(positions, mass, max_force, G):
     return acc
 
 def forces(bodies, max_force, G=1):
+    '''Accesses bodies to calculate forces'''
     if len(bodies) < 2:
         return
 
     positions = np.array([body.pos for body in bodies])
     masses = np.array([body.mass for body in bodies])
-
-    accelerations = compute_forces_numba(positions, masses, max_force, G)
+    accelerations = compute_accel(positions, masses, max_force, G)
 
     for i, body in enumerate(bodies):
         body.acc[:] = accelerations[i]

@@ -25,12 +25,15 @@ def main():
     clock = pygame.time.Clock()
     last_time = pygame.time.get_ticks() / 1000.0
 
-    ui = UIManager(screen, manager, bodies, NUM_BODIES, VEL_RANGE, MASS_RANGE)
-    manager = pygame_gui.UIManager((WIDTH, HEIGHT), theme_path="theme.json")
-
     bodies = []
     paused = False
     running = True
+
+    manager = pygame_gui.UIManager((WIDTH, HEIGHT), theme_path="theme.json")
+    ui = UIManager(screen, manager, bodies, NUM_BODIES, VEL_RANGE, MASS_RANGE)
+
+
+
 
     while running:
         #Clock Speed
