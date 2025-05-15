@@ -70,6 +70,21 @@ class UIManager:
         self.body_count_slider = pygame_gui.elements.UIHorizontalSlider(
             pygame.Rect((x, 130), (200, 25)),
             self.body_count, (1, 100), self.manager)
+        
+        # FPS and Body Count Info Display (bottom-right)
+        screen_width, screen_height = self.screen.get_size()
+        self.fps_label = pygame_gui.elements.UILabel(
+            pygame.Rect((screen_width - 125, screen_height - 60), (150, 25)),
+            "", self.manager)
+        self.body_count_label_display = pygame_gui.elements.UILabel(
+            pygame.Rect((screen_width - 125, screen_height - 30), (150, 25)),
+            "", self.manager)
+
+
+    def update_info(self, fps):
+        self.fps_label.set_text(f"FPS: {int(fps)}")
+        self.body_count_label_display.set_text(f"Bodies: {len(self.bodies)}")
+
 
     # Handle mouse-based body creation ------------------------------------------
     def handle_event(self, event):
