@@ -86,6 +86,7 @@ class UIManager:
         self.body_count_label_display.set_text(f"Bodies: {len(self.bodies)}")
 
 
+
     # Handle mouse-based body creation ------------------------------------------
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and not self.manager.get_hovering_any_element():
