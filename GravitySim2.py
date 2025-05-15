@@ -16,14 +16,17 @@ class Body:
         self.pos += self.vel*time_step  #p0 = p1 +v*t
         self.acc=np.zeros(2)            #reset acceleration each frame
 
-    def draw(self, screen, max_color):
+    def draw(self, screen, max_color, body_color=None):
+        
         max_speed = max_color                    #at max_speed, color will be maximum vibrancy 
         speed = np.linalg.norm(self.vel)        #Velocity magnitude
         norm_speed = min(speed/(max_speed),1)     #Normalization stuff
         speed_color = (np.abs(1-norm_speed))*255  #change from saturated -> vibrant color
         speed_color = int(speed_color)
         #Update body
-        pygame.draw.circle(screen, (255,speed_color,speed_color), self.pos, self.radius)    
+        pygame.draw.circle(screen, (255,speed_color,speed_color), self.pos, self.radius) 
+        
+        
 #BODY CLASS----------------------------------------------------------------
 
 

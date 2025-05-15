@@ -111,8 +111,6 @@ class UIManager:
     def update_info(self, fps):
         self.fps_label.set_text(f"FPS: {int(fps)}")
         self.body_count_label_display.set_text(f"Bodies: {len(self.bodies)}")
-        #update the hover label
-        #self.update_hover_label()
         
         #if a body is selected by a user, then display its mass and velocity
         if self.selected_body:
@@ -122,7 +120,7 @@ class UIManager:
         else:
             self.selected_mass_label.set_text("Mass: ")
             self.selected_velocity_label.set_text("Velocity: ")
-
+        
 
     #NEW FUNCTION: spawns the bodies here for better readability
      # Spawn a cluster of bodies at the start_pos
@@ -182,6 +180,9 @@ class UIManager:
             if event.ui_element == self.pause_button:
                 return 'toggle_pause'
             elif event.ui_element == self.reset_button:
+                #clear the selected body mass
+                self.selected_body = None
+                self.selected_mass_label.set_text("")
                 return 'reset'
             elif event.ui_element == self.create_button:
                 return 'create_body'
@@ -190,11 +191,9 @@ class UIManager:
                     self.bodies.clear()
                     self.selected_body = None
                     self.bodies.extend(button.callback_func())
-                    """
-                    #clear the selected body mass
-                    self.selected_body = None
-                    self.selected_mass_label.set_text("")
-                    """
+                    
+                    
+                    
 
         elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
             if event.ui_element == self.mass_slider:

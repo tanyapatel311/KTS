@@ -13,6 +13,9 @@
       "text-color": "#FD6905",
       "background-color": "#FFFFFF"
     }
+  },
+  "colors": {
+    "selected_body_color":[0, 100,255]
   }
   
 }
