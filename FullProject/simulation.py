@@ -1,6 +1,6 @@
 import pygame
 import numpy as np
-import random
+from numba import njit
 
 #BODY CLASS----------------------------------------------------------------
 class Body:
@@ -26,8 +26,43 @@ class Body:
         pygame.draw.circle(screen, (255,speed_color,speed_color), self.pos, self.radius)    
 #BODY CLASS----------------------------------------------------------------
 
+@njit
+def compute_forces_numba(positions, masses, max_force, G):
+    n = positions.shape[0]
+    acc = np.zeros((n, 2))
+
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                continue
+            dx = positions[j, 0] - positions[i, 0]
+            dy = positions[j, 1] - positions[i, 1]
+            dist_sqr = dx * dx + dy * dy + 1e-5  # Softening to avoid division by zero
+            dist = np.sqrt(dist_sqr)
+            f_mag = min(G * masses[i] * masses[j] / dist_sqr, max_force)
+            fx = f_mag * dx / (dist * masses[i])
+            fy = f_mag * dy / (dist * masses[i])
+            acc[i, 0] += fx
+            acc[i, 1] += fy
+
+    return acc
+
+def forces(bodies, max_force, G=1):
+    if len(bodies) < 2:
+        return
+
+    positions = np.array([body.pos for body in bodies])
+    masses = np.array([body.mass for body in bodies])
+
+    accelerations = compute_forces_numba(positions, masses, max_force, G)
+
+    for i, body in enumerate(bodies):
+        body.acc = accelerations[i]
+
+
+
 #Force function------------------------------------------------------------
-def forces (bodies, max_force, G=1):
+def forcesa (bodies, max_force, G=1):
     if len(bodies) < 2:
         return
     positions = np.array([body.pos for body in bodies])
@@ -44,6 +79,8 @@ def forces (bodies, max_force, G=1):
     for i, body in enumerate(bodies):
         body.acc = total_forces[i]/masses[i]
 #Force function------------------------------------------------------------
+
+
 
 #Generate particle spawns--------------------------------------------------
 def generate_spawn(n, velocity_range, mass_range, width=99, height=100):
