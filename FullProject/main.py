@@ -52,10 +52,12 @@ def main():
                 ui.pause_button.set_text("Play" if paused else "Pause")
             elif action == 'reset':
                 bodies.clear()
-
+        
         manager.update(dt)
+        ui.update_info(clock.get_fps())
         manager.draw_ui(screen)
         pygame.display.update()
+        
 
     pygame.quit()
 

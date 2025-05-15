@@ -18,12 +18,24 @@ class Body:
 
     def draw(self, screen, max_color):
         max_speed = max_color                    #at max_speed, color will be maximum vibrancy 
-        speed = np.linalg.norm(self.vel)        #Velocity magnitude
-        norm_speed = min(speed/(max_speed),1)     #Normalization stuff
-        speed_color = (np.abs(1-norm_speed))*255  #change from saturated -> vibrant color
-        speed_color = int(speed_color)
+        #speed = np.linalg.norm(self.vel)        #Velocity magnitude
+        #norm_speed = min(speed/(max_speed),1)     #Normalization stuff
+        #speed_color = (np.abs(1-norm_speed))*255  #change from saturated -> vibrant color
+        #speed_color = int(speed_color)
+        
+        speed = np.linalg.norm(self.vel)    #Velocity magnitude
+        if np.isnan(speed) or max_color == 0:
+            speed_color = 0     
+        else:
+            norm_speed = min(speed / max_color, 1)  #Normalization stuff
+            speed_color = int((np.abs(1 - norm_speed)) * 255) #change from saturated -> vibrant color
+
+        
+        # Compute radius based on mass (capped)
+        scale_radius = min(max(2, int(self.mass ** 0.3)), 10)
+        
         #Update body
-        pygame.draw.circle(screen, (255,speed_color,speed_color), self.pos, self.radius)    
+        pygame.draw.circle(screen, (255,speed_color,speed_color), self.pos, scale_radius)    
 #BODY CLASS----------------------------------------------------------------
 
 @njit
@@ -98,12 +110,12 @@ def generate_spawn(n, velocity_range, mass_range, width=99, height=100):
     return bodies
 #Generate particle spawns--------------------------------------------------
 
-def generate_ring(n, center=(400, 300), radius=100):
+def generate_ring(n, center=(400, 300), scale_radius=100):
     bodies = []
     for i in range(n):
         theta = 2 * np.pi * i / n
-        x = center[0] + radius * np.cos(theta)
-        y = center[1] + radius * np.sin(theta)
+        x = center[0] + scale_radius * np.cos(theta)
+        y = center[1] + scale_radius * np.sin(theta)
 
         # Optional: perpendicular orbital velocity
         vx = -np.sin(theta)
@@ -148,10 +160,13 @@ def generate_two_galaxies(n_per_galaxy=50, center1=(400, 300), center2=(600, 300
             vy = -np.cos(angle)
             vel = np.array([vx, vy]) * np.sqrt(2000 / (r + 5)) + velocity_offset
 
-            bodies.append(Body(50, [x, y], vel))
+            bodies.append(Body(25, [x, y], vel))
         return bodies
 
     galaxy1 = spiral(center1, n_per_galaxy, arm_offset=0, velocity_offset=np.array(velocity1))
     galaxy2 = spiral(center2, n_per_galaxy, arm_offset=np.pi, velocity_offset=np.array(velocity2))
+    
+    #galaxy1.append(Body(100, list(center1), velocity1))
+    #galaxy2.append(Body(100, list(center1), velocity2))
 
     return galaxy1 + galaxy2
