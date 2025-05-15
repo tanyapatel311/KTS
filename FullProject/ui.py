@@ -138,6 +138,7 @@ class UIManager:
             spawn_pos = position + scatter
             self.bodies.append(Body(self.default_mass, spawn_pos, velocity, self.default_radius))
             
+
     # Handle mouse-based body creation ------------------------------------------
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and not self.manager.get_hovering_any_element():
@@ -158,6 +159,8 @@ class UIManager:
             #velocity = (self.end_pos - self.start_pos) * 0.1
             self.spawn_bodies_button()
             
+            velocity = (self.end_pos - self.start_pos) * 0.4
+
             # Spawn a cluster of bodies at the start_pos
             """
             for _ in range(self.body_count):
