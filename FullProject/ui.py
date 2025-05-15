@@ -94,6 +94,9 @@ class UIManager:
             if event.ui_element == self.pause_button:
                 return 'toggle_pause'
             elif event.ui_element == self.reset_button:
+                #clear the selected body mass
+                self.selected_body = None
+                self.selected_mass_label.set_text("")
                 return 'reset'
             elif event.ui_element == self.mode_toggle_button:
                 self.spawn_mode = not self.spawn_mode

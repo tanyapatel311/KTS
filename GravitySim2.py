@@ -16,14 +16,17 @@ class Body:
         self.pos += self.vel*time_step  #p0 = p1 +v*t
         self.acc=np.zeros(2)            #reset acceleration each frame
 
-    def draw(self, screen, max_color):
+    def draw(self, screen, max_color, body_color=None):
+        
         max_speed = max_color                    #at max_speed, color will be maximum vibrancy 
         speed = np.linalg.norm(self.vel)        #Velocity magnitude
         norm_speed = min(speed/(max_speed),1)     #Normalization stuff
         speed_color = (np.abs(1-norm_speed))*255  #change from saturated -> vibrant color
         speed_color = int(speed_color)
         #Update body
-        pygame.draw.circle(screen, (255,speed_color,speed_color), self.pos, self.radius)    
+        pygame.draw.circle(screen, (255,speed_color,speed_color), self.pos, self.radius) 
+        
+        
 #BODY CLASS----------------------------------------------------------------
 
 
@@ -153,10 +156,24 @@ def main():
     pygame.init()
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    #bodies = generate_spawn(number_of_bodies, rand_start_velocity_range, rand_mass_range, SCREEN_WIDTH, SCREEN_HEIGHT) 
-    #bodies = generate_spiral(number_of_bodies, 5)
-    bodies = generate_ring(number_of_bodies)
+     
+    
+    def choose_shape():
+        choices = ["generate_spawn", "generate_ring", "generate_spiral"]
+        return random.choice(choices)
+    
+    choice = choose_shape()
+    if choice == "generate_spawn":
+        bodies = generate_spawn(number_of_bodies, rand_start_velocity_range, rand_mass_range, SCREEN_WIDTH, SCREEN_HEIGHT)
+    elif choice == "generate_ring":
+        bodies = generate_ring(number_of_bodies)
+    elif choice == "generate_spiral":
+        bodies = generate_spiral(number_of_bodies, 5)
+    else:
+        print("Sorry, there was an error with the simulation.")
+    
 
+    
 
 
     #Main Loop to run Pygame
