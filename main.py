@@ -8,7 +8,7 @@
 
 import pygame, pygame_gui
 from simulation import forces
-from ui import UIManager, generate_two_galaxies
+from ui import UIManager
 
 def main():
     # Simulation settings
@@ -31,9 +31,6 @@ def main():
 
     manager = pygame_gui.UIManager((WIDTH, HEIGHT), theme_path="theme.json")
     ui = UIManager(screen, manager, bodies, NUM_BODIES, VEL_RANGE, MASS_RANGE)
-
-
-
 
     while running:
         #Clock Speed

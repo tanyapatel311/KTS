@@ -27,7 +27,7 @@ class Body:
         pygame.draw.circle(screen, (255,speed_color,speed_color), tuple(self.pos), scale_radius)   #Update body
 #BODY CLASS----------------------------------------------------------------
 
-@njit
+@njit(fastmath=True)
 def compute_accel(positions, mass, max_force, G):
     '''calculates acceleration using Numba implementation'''
     n = positions.shape[0]
