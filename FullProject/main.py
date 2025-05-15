@@ -1,6 +1,7 @@
 import pygame, pygame_gui
 from simulation import forces
 from ui import UIManager
+import numpy as np
 
 def main():
     # Simulation settings
@@ -52,9 +53,16 @@ def main():
                 ui.pause_button.set_text("Play" if paused else "Pause")
             elif action == 'reset':
                 bodies.clear()
+            elif action == 'create_body':
+                #center = np.array([WIDTH//2, HEIGHT //2])
+                ui.spawn_bodies_button()
+                
         
         manager.update(dt)
         ui.update_info(clock.get_fps())
+        #call the update_hover_label each frame
+        #ui.update_hover_label()
+        
         manager.draw_ui(screen)
         pygame.display.update()
         
