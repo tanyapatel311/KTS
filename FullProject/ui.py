@@ -21,23 +21,6 @@ class UIManager:
         
         #add a selected body class to follow its information later
         self.selected_body = None
-        
-        #get screen size for hover_label
-        screen_width,screen_height = self.screen.get_size()
-        
-        #add a label for the selected body mass
-        self.selected_mass_label = pygame_gui.elements.UILabel(
-            pygame.Rect((-90, screen_height - 30), (250, 25)),
-            f"Mass of body: ", self.manager, object_id="#hover_label"
-        )
-        #add a label for the velocity of the selected body mass
-    
-        self.selected_velocity_label = pygame_gui.elements.UILabel(
-            pygame.Rect((-80, screen_height - 60), (250, 25)),
-            f"Velocity of body: ", self.manager, object_id="#hover_label"
-        )
-        
-
         self._setup_gui()
 
     # Setup GUI components ------------------------------------------------------
@@ -99,6 +82,17 @@ class UIManager:
         self.body_count_label_display = pygame_gui.elements.UILabel(
             pygame.Rect((screen_width - 125, screen_height - 30), (150, 25)),
             "", self.manager)
+        
+        #add a label for the selected body mass
+        self.selected_mass_label = pygame_gui.elements.UILabel(
+            pygame.Rect((-90, screen_height - 30), (250, 25)),
+            f"Mass of body: ", self.manager, object_id="#hover_label"
+        )
+        #add a label for the velocity of the selected body mass
+        self.selected_velocity_label = pygame_gui.elements.UILabel(
+            pygame.Rect((-80, screen_height - 60), (250, 25)),
+            f"Velocity of body: ", self.manager, object_id="#hover_label"
+        )
         
     #check if the user's mouse is over a body
     def mouse_over_body (self, mouse_pos):
