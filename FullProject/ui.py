@@ -28,14 +28,15 @@ class UIManager:
         #add a label for the selected body mass
         self.selected_mass_label = pygame_gui.elements.UILabel(
             pygame.Rect((-50, screen_height - 30), (250, 25)),
-            f"Mass of body: ", self.manager
+            f"Mass of body: ", self.manager, object_id="#hover_label"
         )
-        #add a hover label that will show the mass 
-        #self.hover_label = pygame_gui.elements.UILabel(pygame.Rect((0, 0), (100, 25)), "MASS: ",
-            #self.manager, object_id="#hover_label")
+        #add a label for the velocity of the selected body mass
+    
+        self.selected_velocity_label = pygame_gui.elements.UILabel(
+            pygame.Rect((-50, screen_height - 60), (250, 25)),
+            f"Velocity of body: ", self.manager, object_id="#hover_label"
+        )
         
-        #hide the hover label for now 
-        #self.hover_label.hide()
 
         self._setup_gui()
 
@@ -113,11 +114,14 @@ class UIManager:
         #update the hover label
         #self.update_hover_label()
         
-        #if a body is selected by a user, then display its mass
+        #if a body is selected by a user, then display its mass and velocity
         if self.selected_body:
             self.selected_mass_label.set_text(f"Mass: {int(self.selected_body.mass)}")
+            vel = self.selected_body.vel
+            self.selected_velocity_label.set_text(f"Velocity: {vel[0]:.2f}, {vel[1]:.2f}")
         else:
             self.selected_mass_label.set_text("Mass: ")
+            self.selected_velocity_label.set_text("Velocity: ")
 
 
     #NEW FUNCTION: spawns the bodies here for better readability
