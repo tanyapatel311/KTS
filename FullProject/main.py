@@ -1,3 +1,6 @@
+# Gravity Simulation
+# Kevin Kopcinski, Tanya Patel, Sayumi Amarasinghe 
+
 # pip install pygame
 # pip install pygame_gui
 # pip install numpy
@@ -9,7 +12,7 @@ from ui import UIManager, generate_two_galaxies
 
 def main():
     # Simulation settings
-    WIDTH, HEIGHT = 1200, 750
+    WIDTH, HEIGHT = 1200, 650
     GRAVITY = 100
     MAX_FORCE = 100
     NUM_BODIES = 1500
@@ -22,14 +25,12 @@ def main():
     clock = pygame.time.Clock()
     last_time = pygame.time.get_ticks() / 1000.0
 
+    ui = UIManager(screen, manager, bodies, NUM_BODIES, VEL_RANGE, MASS_RANGE)
     manager = pygame_gui.UIManager((WIDTH, HEIGHT), theme_path="theme.json")
 
     bodies = []
-    ui = UIManager(screen, manager, bodies, NUM_BODIES, VEL_RANGE, MASS_RANGE)
     paused = False
-
     running = True
-
 
     while running:
         #Clock Speed
@@ -40,7 +41,7 @@ def main():
         dt = min(dt, 0.045)
 
         screen.fill((0, 0, 0))
-        ui.draw_overlay()
+        ui.draw_line()
 
         #Body calculations
         if not paused:
@@ -67,12 +68,8 @@ def main():
 
         manager.update(dt)
         ui.update_info(clock.get_fps())
-        #call the update_hover_label each frame
-        #ui.update_hover_label()
-        
         manager.draw_ui(screen)
         pygame.display.update()
-
     pygame.quit()
 
 if __name__ == '__main__':

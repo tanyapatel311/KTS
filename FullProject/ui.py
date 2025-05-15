@@ -35,9 +35,9 @@ class UIManager:
         #Create dictionary of generator functions
         generator_map = {
             'Ring': lambda: generate_ring(self.num_bodies),
-            'Spiral': lambda: generate_spiral(self.num_bodies, 3),
-            'Two Galaxies': lambda: generate_two_galaxies(150),
-            'Random': lambda: generate_spawn(self.num_bodies, self.vel_range, self.mass_range, *self.screen.get_size())
+            'Spiral': lambda: generate_spiral(self.num_bodies),
+            'Two Galaxies': lambda: generate_two_galaxies(750),
+            'Random': lambda: generate_spawn(self.num_bodies, self.vel_range, self.mass_range, self.screen.get_width(), self.screen.get_height()),
         }
 
         self.generate_buttons = []
@@ -81,7 +81,7 @@ class UIManager:
                 mouse_pos = np.array(event.pos)
                 # Check if mouse is over any body
                 for body in self.bodies:
-                    if np.linalg.norm(mouse_pos - body.pos) < max(5, body.radius + 2):
+                    if np.linalg.norm(mouse_pos - body.pos) < max(3, body.radius):
                         self.selected_body = body
                         break
                 else:
@@ -94,9 +94,6 @@ class UIManager:
             if event.ui_element == self.pause_button:
                 return 'toggle_pause'
             elif event.ui_element == self.reset_button:
-                #clear the selected body mass
-                self.selected_body = None
-                self.selected_mass_label.set_text("")
                 return 'reset'
             elif event.ui_element == self.mode_toggle_button:
                 self.spawn_mode = not self.spawn_mode
