@@ -25,7 +25,7 @@ class Body:
             speed_color = int((np.abs(1 - norm_speed)) * 255)   #Change from saturated -> vibrant color
         
         scale_radius = min(max(2, int(self.mass ** 0.3)), 10)   #Compute radius based on mass (capped)
-        pygame.draw.circle(screen, (255,speed_color,speed_color), self.pos, scale_radius)   #Update body
+        pygame.draw.circle(screen, (255,speed_color,speed_color), tuple(self.pos), scale_radius)   #Update body
 #BODY CLASS----------------------------------------------------------------
 
 @njit
@@ -39,20 +39,19 @@ def compute_forces_numba(positions, mass, max_force, G):
 
         for j in range(i+1,n):
             m2 = mass[j]
-            if i == j:
-                continue
             dx = positions[j, 0] - x
             dy = positions[j, 1] - y
-            dist_sqr = dx * dx + dy * dy #+ 1e-5  # Softening to avoid division by zero
+            dist_sqr = dx * dx + dy * dy + 0.00001  # Softening to avoid division by zero
             dist = np.sqrt(dist_sqr)
 
             f_mag = min(G * m1 * m2 / dist_sqr, max_force)
             fx = f_mag * dx / dist
             fy = f_mag * dy / dist
 
-            acc[i, 0] += fx
-            acc[i, 1] += fy
-
+            acc[i, 0] += fx / m1    #Comupte accelerations
+            acc[i, 1] += fy / m1    
+            acc[j, 0] -= fx / m2
+            acc[j, 1] -= fy / m2
     return acc
 
 def forces(bodies, max_force, G=1):
@@ -65,14 +64,13 @@ def forces(bodies, max_force, G=1):
     accelerations = compute_forces_numba(positions, masses, max_force, G)
 
     for i, body in enumerate(bodies):
-        body.acc = accelerations[i]
+        body.acc[:] = accelerations[i]
 
 
 def generate_spawn(n, velocity_range, mass_range, width=99, height=100):
     '''Randomly generates a spawn position, velocity, and mass'''
-    y = np.random.uniform(0, height, size=n)                                   #Random generat x-position
-    x = np.random.uniform(0, width, size=n)                                    #Random generat x-position
-    #position = np.column_stack((x_axis, y_axis))
+    x = np.random.uniform(0, width, size=n)                                         #Random generate x-position
+    y = np.random.uniform(0, height, size=n)                                        #Random generate y-position
     velocity = np.random.uniform(velocity_range[0], velocity_range[1], size=(n, 2)) #Random generate velocity
     mass = np.random.uniform(mass_range[0], mass_range[1], size=n)                  #Random generate mass
 
